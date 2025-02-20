@@ -1,10 +1,8 @@
 package com.reactiveprogramming.service;
 
-import org.hamcrest.core.AnyOf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.internal.matchers.Any;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -75,5 +73,59 @@ class StreamsServiceTest {
     void getFruitsTransformSwitchIfEmpty() {
         var result = service.getFruitsTransformSwitchIfEmpty(10);
         StepVerifier.create(result).expectNextCount(2L).verifyComplete();
+    }
+
+    @Test
+    void getFruitsConcatWith() {
+        var result = service.getFruitsConcatWith();
+        StepVerifier.create(result).expectNextCount(4L).verifyComplete();
+    }
+
+    @Test
+    void getFruitsConcat() {
+        var result = service.getFruitsConcat();
+        StepVerifier.create(result).expectNextCount(4L).verifyComplete();
+    }
+
+    @Test
+    void getFruitsMerge() {
+        var result = service.getFruitsMerge();
+        StepVerifier.create(result).expectNextCount(4L).verifyComplete();
+    }
+
+    @Test
+    void getFruitsZip() {
+        var result = service.getFruitsZip();
+        StepVerifier.create(result).expectNextCount(2L).verifyComplete();
+    }
+
+    @Test
+    void getFruitsMapDoOnNext() {
+        var result = service.getFruitsMapDoOnNext();
+        StepVerifier.create(result).expectNextCount(3L).verifyComplete();
+    }
+
+    @Test
+    void getFruitsOnErrorReturn() {
+        var result = service.getFruitsOnErrorReturn().log();
+        StepVerifier.create(result).expectNext("Banana", "Apple", "Watermelon", "Mango").verifyComplete();
+    }
+
+    @Test
+    void getFruitsOnErrorContinue() {
+        var result = service.getFruitsOnErrorContinue().log();
+        StepVerifier.create(result).expectNext("BANANA", "WATERMELON").verifyComplete();
+    }
+
+    @Test
+    void getFruitsOnErrorMap() {
+        var result = service.getFruitsOnErrorMap().log();
+        StepVerifier.create(result).expectNext("BANANA").expectError(IllegalStateException.class).verify();
+    }
+
+    @Test
+    void getFruitsDoOnError() {
+        var result = service.getFruitsOnErrorMap().log();
+        StepVerifier.create(result).expectNext("BANANA").expectError(RuntimeException.class).verify();
     }
 }
